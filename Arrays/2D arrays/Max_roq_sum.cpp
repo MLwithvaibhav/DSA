@@ -21,3 +21,27 @@ int main() {
 
     return 0;
 }
+
+
+
+
+
+
+
+
+
+// # maxcolsum
+
+int getMaxColSum(int mat[][3], int rows, int cols) {
+    int maxColSum = INT_MIN;
+
+    for (int i = 0; i < cols; i++) {  // column fixed
+        int colSum = 0;               // har column ke start me reset
+        for (int j = 0; j < rows; j++) {
+            colSum += mat[j][i];      // row badlegi, col fixed
+        }
+        maxColSum = max(maxColSum, colSum);
+    }
+
+    return maxColSum;
+}
