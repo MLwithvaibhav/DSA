@@ -1,0 +1,112 @@
+#include <iostream>
+#include <vector>
+#include <string>
+using namespace std;
+
+/*
+Question:
+Given an array of characters, compress it in-place.
+The compression rules:
+- Consecutive repeating characters are replaced with the character followed by the count of repetitions.
+- If a character appears only once, keep it as is.
+- The function should return the new length of the array after compression.
+
+Example:
+Input: ['a','a','b','b','c','c','c']
+Output: 6  (chars becomes ['a','2','b','2','c','3'])
+
+Approach:
+1. Use two pointers:
+   - i: to traverse the array
+   - idx: to place the compressed characters in-place
+2. For each group of consecutive identical characters:
+   - Count how many times the character appears (count variable)
+   - Write the character to chars[idx]
+   - If count > 1, convert count to string and write each digit to chars[idx]
+3. Adjust the main loop index to skip counted characters.
+4. Resize the array to the new length and return that length.
+
+Dry Run Example:
+chars = ['a','a','b','b','c','c','c']
+n = 7
+idx = 0
+
+i = 0:
+    ch = 'a'
+    count = 2 (because chars[0] and chars[1] are 'a')
+    Place 'a' at chars[0] -> idx = 1
+    Place '2' at chars[1] -> idx = 2
+    i becomes 2 after while loop, then i-- => i = 1 (for loop will increment to 2)
+
+i = 2:
+    ch = 'b'
+    count = 2
+    Place 'b' at chars[2] -> idx = 3
+    Place '2' at chars[3] -> idx = 4
+    i becomes 4 after while loop, then i-- => i = 3
+
+i = 4:
+    ch = 'c'
+    count = 3
+    Place 'c' at chars[4] -> idx = 5
+    Place '3' at chars[5] -> idx = 6
+    i becomes 7 after while loop, then i-- => i = 6
+
+End:
+chars = ['a','2','b','2','c','3']
+idx = 6
+
+Return 6
+Output array: a2b2c3
+*/
+
+/* Code */
+class Solution {
+public:
+    int compress(vector<char>& chars) {
+        int n = chars.size();
+        int idx = 0;
+
+        for (int i = 0; i < n; i++) {
+            char ch = chars[i];
+            int count = 0;
+
+            while (i < n && chars[i] == ch) {
+                count++;
+                i++;
+            }
+
+            if (count == 1) {
+                chars[idx++] = ch;
+            } else {
+                chars[idx++] = ch;
+                string str = to_string(count);
+                for (char dig : str) {
+                    chars[idx++] = dig;
+                }
+            }
+
+            i--; // Adjust index for for-loop increment
+        }
+
+        chars.resize(idx);
+        return idx;
+    }
+};
+
+int main() {
+    vector<char> chars = {'a','a','b','b','c','c','c'};
+    Solution obj;
+    int newLen = obj.compress(chars);
+
+    cout << "New Length: " << newLen << endl;
+    cout << "Compressed Array: ";
+    for (char c : chars) cout << c;
+    cout << endl;
+}
+
+/*
+Output:
+New Length: 6
+Compressed Array: a2b2c3
+*/
